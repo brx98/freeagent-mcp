@@ -107,6 +107,52 @@ export function registerInvoiceTools(server: McpServer, client: FreeAgentClient)
     }
   );
 
+  // Update a single invoice line item.
+  // Do NOT edit items by nesting invoice_items in a PUT /invoices/{id}: FreeAgent
+  // appends every nested item as a new line instead of matching existing ones.
+  server.tool(
+    "freeagent_update_invoice_item",
+    "Update a single line item on an invoice in FreeAgent. Use this instead of resending invoice_items on the invoice, which would add duplicate lines. Item IDs are the trailing number of each invoice item's url.",
+    {
+      invoice_item_id: safeId.describe("The invoice item ID (from the item's url, e.g. 216300683)"),
+      description: z.string().optional().describe("Item description"),
+      price: z.string().optional().describe("Unit price (string, e.g. \"300.0\")"),
+      quantity: z.string().optional().describe("Quantity (string, e.g. \"1.0\")"),
+      item_type: z.string().optional().describe("Item type (Hours/Days/Weeks/Months/Years/Products/Comment/Rebilling)"),
+    },
+    async ({ invoice_item_id, ...rest }) => {
+      logToolCall("freeagent_update_invoice_item", { invoice_item_id, ...rest });
+      try {
+        const invoice_item: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(rest)) {
+          if (v !== undefined) invoice_item[k] = v;
+        }
+        const data = await client.putJson(`/invoice_items/${invoice_item_id}`, { invoice_item });
+        return jsonResponse(data);
+      } catch (error) {
+        return errorResponse(error);
+      }
+    }
+  );
+
+  // Delete a single invoice line item
+  server.tool(
+    "freeagent_delete_invoice_item",
+    "Delete a single line item from an invoice in FreeAgent",
+    {
+      invoice_item_id: safeId.describe("The invoice item ID (from the item's url, e.g. 216300683)"),
+    },
+    async ({ invoice_item_id }) => {
+      logToolCall("freeagent_delete_invoice_item", { invoice_item_id });
+      try {
+        const data = await client.deleteReq(`/invoice_items/${invoice_item_id}`);
+        return jsonResponse(data);
+      } catch (error) {
+        return errorResponse(error);
+      }
+    }
+  );
+
   // Delete invoice
   server.tool(
     "freeagent_delete_invoice",

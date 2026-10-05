@@ -141,11 +141,35 @@ describe("registerContactTools", () => {
 });
 
 describe("registerInvoiceTools", () => {
-  it("registers 9 tools", () => {
+  it("registers 11 tools", () => {
     const { server, tools } = createMockServer();
     const client = createMockClient();
     registerInvoiceTools(server, client);
-    expect(tools.size).toBe(9);
+    expect(tools.size).toBe(11);
+  });
+
+  it("freeagent_update_invoice_item calls putJson on the item path with only provided fields", async () => {
+    const { server, tools } = createMockServer();
+    const client = createMockClient();
+    registerInvoiceTools(server, client);
+
+    const handler = tools.get("freeagent_update_invoice_item")!;
+    await handler({ invoice_item_id: "789", description: "New description" });
+
+    expect(client.putJson).toHaveBeenCalledWith("/invoice_items/789", {
+      invoice_item: { description: "New description" },
+    });
+  });
+
+  it("freeagent_delete_invoice_item calls deleteReq on the item path", async () => {
+    const { server, tools } = createMockServer();
+    const client = createMockClient();
+    registerInvoiceTools(server, client);
+
+    const handler = tools.get("freeagent_delete_invoice_item")!;
+    await handler({ invoice_item_id: "789" });
+
+    expect(client.deleteReq).toHaveBeenCalledWith("/invoice_items/789");
   });
 
   it("freeagent_mark_invoice_as_sent calls putJson with transition path", async () => {

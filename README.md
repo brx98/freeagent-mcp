@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/freeagent-mcp-server.svg)](https://www.npmjs.com/package/freeagent-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-MCP server for the [FreeAgent](https://www.freeagent.com/) accounting API. Provides 76 tools covering invoices, expenses, contacts, projects, timeslips, banking, bills, estimates, credit notes, accounting reports, and more.
+MCP server for the [FreeAgent](https://www.freeagent.com/) accounting API. Provides 78 tools covering invoices, expenses, contacts, projects, timeslips, banking, bills, estimates, credit notes, accounting reports, and more.
 
 ## Features
 
@@ -161,7 +161,7 @@ freeagent-mcp/
 │       ├── projects.ts       # Project management tools (5)
 │       ├── tasks.ts          # Task management tools (5)
 │       ├── timeslips.ts      # Time tracking tools (7)
-│       ├── invoices.ts       # Invoice tools (9)
+│       ├── invoices.ts       # Invoice tools (11)
 │       ├── estimates.ts      # Estimate tools (7)
 │       ├── bills.ts          # Bill management tools (5)
 │       ├── credit-notes.ts   # Credit note tools (5)
@@ -238,7 +238,7 @@ freeagent-mcp/
 | `freeagent_start_timer` | Start a timer on a timeslip | `POST /timeslips/:id/timer` |
 | `freeagent_stop_timer` | Stop a timer on a timeslip | `DELETE /timeslips/:id/timer` |
 
-### Invoices (9 tools)
+### Invoices (11 tools)
 
 | Tool | Description | API Endpoint |
 |------|-------------|-------------|
@@ -246,6 +246,8 @@ freeagent-mcp/
 | `freeagent_get_invoice` | Get a specific invoice | `GET /invoices/:id` |
 | `freeagent_create_invoice` | Create a new invoice | `POST /invoices` |
 | `freeagent_update_invoice` | Update an invoice | `PUT /invoices/:id` |
+| `freeagent_update_invoice_item` | Update a single invoice line item | `PUT /invoice_items/:id` |
+| `freeagent_delete_invoice_item` | Delete a single invoice line item | `DELETE /invoice_items/:id` |
 | `freeagent_delete_invoice` | Delete an invoice | `DELETE /invoices/:id` |
 | `freeagent_mark_invoice_as_sent` | Mark invoice as sent | `PUT /invoices/:id/transitions/mark_as_sent` |
 | `freeagent_mark_invoice_as_draft` | Mark invoice as draft | `PUT /invoices/:id/transitions/mark_as_draft` |
